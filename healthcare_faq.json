@@ -1,0 +1,143 @@
+{
+  "title": "Healthcare FAQ",
+  "paragraphs": [
+    {
+      "context": "Our hospital provides 24/7 emergency services, specialized surgeries, outpatient care, and diagnostic services. We have a well-equipped emergency room and operate around the clock to provide urgent care. Our skilled team of surgeons handles a variety of specialized procedures including orthopedic, cardiac, and neurological surgeries.",
+      "qas": [
+        {
+          "question": "What services does the hospital provide?",
+          "id": "1",
+          "answer": "24/7 emergency services, specialized surgeries, outpatient care, and diagnostic services",
+          "is_impossible": false
+        },
+        {
+          "question": "Does the hospital provide specialized surgeries?",
+          "id": "2",
+          "answer": "specialized surgeries",
+          "is_impossible": false
+        },
+        {
+          "question": "Are there any surgical specialties offered?",
+          "id": "3",
+          "answer": "orthopedic, cardiac, and neurological surgeries",
+          "is_impossible": false
+        }
+      ]
+    },
+    {
+      "context": "You can book an appointment with our specialists through our hospital website or by calling our appointment hotline. We recommend booking appointments at least 2-3 weeks in advance for specialized services. If it's an emergency, please call our emergency services directly for immediate care.",
+      "qas": [
+        {
+          "question": "How can I book an appointment?",
+          "id": "4",
+          "answer": "through our hospital website or by calling our appointment hotline",
+          "is_impossible": false
+        },
+        {
+          "question": "How far in advance should I book an appointment?",
+          "id": "5",
+          "answer": "2-3 weeks",
+          "is_impossible": false
+        },
+        {
+          "question": "What should I do if I have an emergency?",
+          "id": "6",
+          "answer": "call our emergency services directly for immediate care",
+          "is_impossible": false
+        }
+      ]
+    },
+    {
+      "context": "Our hospital has a well-equipped pharmacy where you can get prescriptions filled. We offer both prescription and over-the-counter medications. Our pharmacists are available to answer any questions regarding your medications and provide counseling on proper usage.",
+      "qas": [
+        {
+          "question": "Where can I get my prescription filled?",
+          "id": "7",
+          "answer": "Our hospital pharmacy",
+          "is_impossible": false
+        },
+        {
+          "question": "Does the pharmacy offer over-the-counter medications?",
+          "id": "8",
+          "answer": "over-the-counter medications",
+          "is_impossible": false
+        },
+        {
+          "question": "Can I ask the pharmacist for help with my medications?",
+          "id": "9",
+          "answer": "Our pharmacists are available to answer any questions regarding your medications and provide counseling on proper usage",
+          "is_impossible": false
+        }
+      ]
+    },
+    {
+      "context": "Our hospital offers comprehensive care including emergency services, general surgeries, maternity care, diagnostic tests, and outpatient services. The emergency room is fully equipped to handle critical cases, and our surgical team is experienced in handling both routine and complex procedures.",
+      "qas": [
+        {
+          "question": "What types of services are available at the hospital?",
+          "id": "1",
+          "answer": "emergency services, general surgeries, maternity care, diagnostic tests, and outpatient services",
+          "is_impossible": false
+        },
+        {
+          "question": "Does the hospital have a maternity care unit?",
+          "id": "2",
+          "answer": "Yes, the hospital provides maternity care",
+          "is_impossible": false
+        },
+        {
+          "question": "What types of surgeries can be performed at the hospital?",
+          "id": "3",
+          "answer": "both routine and complex procedures",
+          "is_impossible": false
+        }
+      ]
+    },
+    {
+      "context": "Appointments for specialized consultations can be made through our hospital's mobile app or by calling the hospital's main phone line. Patients are encouraged to make appointments at least 1-2 weeks in advance to avoid long waiting times. Emergency cases are handled immediately through our emergency services.",
+      "qas": [
+        {
+          "question": "How do I schedule an appointment with a specialist?",
+          "id": "4",
+          "answer": "through the hospital's mobile app or by calling the hospital's main phone line",
+          "is_impossible": false
+        },
+        {
+          "question": "How soon should I schedule an appointment?",
+          "id": "5",
+          "answer": "at least 1-2 weeks in advance",
+          "is_impossible": false
+        },
+        {
+          "question": "What should I do in case of an emergency?",
+          "id": "6",
+          "answer": "Emergency cases are handled immediately through our emergency services",
+          "is_impossible": false
+        }
+      ]
+    },
+    {
+      "context": "Our pharmacy is located within the hospital and provides both prescription medications and over-the-counter drugs. Our pharmacists are available to assist patients with any medication-related questions and can provide guidance on dosage and side effects.",
+      "qas": [
+        {
+          "question": "Where can I get my medications filled?",
+          "id": "7",
+          "answer": "At the hospital pharmacy",
+          "is_impossible": false
+        },
+        {
+          "question": "Does the pharmacy offer over-the-counter medications?",
+          "id": "8",
+          "answer": "Yes, over-the-counter drugs are available",
+          "is_impossible": false
+        },
+        {
+          "question": "Can the pharmacists help with medication-related questions?",
+          "id": "9",
+          "answer": "Yes, our pharmacists are available to assist with medication-related questions",
+          "is_impossible": false
+        }
+      ]
+    }
+  ]
+}
