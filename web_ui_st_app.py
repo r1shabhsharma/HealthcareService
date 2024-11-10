@@ -1,3 +1,4 @@
+
 import streamlit as st
 import docx2txt
 import textwrap
@@ -6,19 +7,26 @@ from datetime import datetime
 from huggingface_hub import InferenceClient
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, TrainingArguments, Trainer
 from datasets import load_dataset, Dataset
-from docx import Document 
+import torch
+from docx import Document # pip install python-docx
+import time
 
-# Initializing the InferenceClient with Hugging Face token
-api_token = "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"
+import os
+ 
+folder_path = "fine_tuned_healthcare_faq_model"
+
+
+# Initialize the InferenceClient with your Hugging Face token
+api_token = "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"  # replace with your actual token
 PhiClient = InferenceClient(model="microsoft/Phi-3.5-mini-instruct", token=api_token)
 SentimentClient = InferenceClient(model="bhadresh-savani/distilbert-base-uncased-emotion", token=api_token)
 
-# Loading the pre-trained model and tokenizer for question answering
+# Load the pre-trained model and tokenizer for question answering
 model_name = "distilbert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForQuestionAnswering.from_pretrained(model_name)
 
-# To load the dataset and flatten it
+# Function to load the dataset and flatten it
 def load_and_flatten_dataset():
     dataset = load_dataset('json', data_files='healthcare_faq.json')
     flattened_samples = []
@@ -35,6 +43,7 @@ def load_and_flatten_dataset():
         "answer": [item["answer"] for item in flattened_samples]
     })
 
+# Preprocessing function
 def preprocess_function(examples):
     inputs = tokenizer(examples['question'], examples['context'], truncation=True, padding='max_length', max_length=512)
     
@@ -54,6 +63,7 @@ def preprocess_function(examples):
     
     return inputs
 
+# Train the model
 def fine_tune_model():
     flattened_dataset = load_and_flatten_dataset()
     tokenized_dataset = flattened_dataset.map(preprocess_function, batched=True)
@@ -87,27 +97,38 @@ def fine_tune_model():
     trainer.save_model("fine_tuned_healthcare_faq_model")
     tokenizer.save_pretrained("fine_tuned_healthcare_faq_model")
 
-def qna_bot(context):
-    question = st.text_input("Enter your question:")
-    if question:
-        answer = get_answer(context, question)
-        st.write(f"Answer: {answer}")
+# Define Q&A bot function
+def qna_bot(context, reference_answers=None):
+    # Load the fine-tuned model and tokenizer
+    model = AutoModelForQuestionAnswering.from_pretrained("fine_tuned_healthcare_faq_model")
+    tokenizer = AutoTokenizer.from_pretrained("fine_tuned_healthcare_faq_model")
 
-def get_answer(context, question):
-    prompt = [{"role": "user", "content": f"{context}\n\nQuestion: {question}\n\nAnswer:"}]
-    output = PhiClient.chat.completions.create(
-        model="microsoft/Phi-3.5-mini-instruct",
-        messages=prompt,
-        stream=True,
-        temperature=0.5,
-        max_tokens=256,
-        top_p=0.7
+    question = st.text_input("Enter your question:")
+    predictions = []
+    if question:
+        start_time = time.time() 
+        answer = get_answer(context, question, model, tokenizer)
+        end_time = time.time() 
+        latency = end_time - start_time
+        st.write(f"Latency: {latency:.4f} seconds") 
+        st.write(f"Answer: {answer}")
+        predictions.append(answer)
+        if reference_answers:
+            evaluate_metrics(predictions, reference_answers)
+
+
+def get_answer(context, question, model, tokenizer):
+    inputs = tokenizer(question, context, return_tensors='pt')
+    start_scores, end_scores = model(**inputs)
+
+    start_index = torch.argmax(start_scores)
+    end_index = torch.argmax(end_scores)
+
+    answer = tokenizer.convert_tokens_to_string(
+        tokenizer.convert_ids_to_tokens(inputs["input_ids"][0][start_index:end_index+1])
     )
-    full_response = []
-    for chunk in output:
-        full_response.append(chunk.choices[0].delta.content)
-    response = "".join(full_response)
-    return print_wrapped_text(response)
+    return print_wrapped_text(answer)
+
 
 # Sentiment Analysis
 def detect_sentiment(statement):
@@ -117,7 +138,7 @@ def detect_sentiment(statement):
         sentiment_results += f"{sentiment.label}: {sentiment.score * 100:.2f}%\n"
     return sentiment_results
 
-# To provide patient summary
+# Summarizer
 def summarizer(context):
     prompt = f"Summarize the following patient notes:\n\n{context}\n\nSummary:"
     output = PhiClient.text_generation(prompt, max_new_tokens=300, temperature=0.3)
@@ -152,19 +173,17 @@ def update_patient_notes(doc_path, new_notes):
     doc.add_paragraph(f"Updated on {timestamp}:\n{new_notes}\n")
     doc.save(doc_path)
 
-
-
-### Streamlit Interface for showing UI ###
+# Streamlit Interface
 st.title("Healthcare Assistant Tool")
+
 option = st.sidebar.selectbox("Choose an option:", 
-                              ["Select an option", 
-                               "Get Question Answering chatbot", 
+                              ["Select an option", "Get Question Answering chatbot", 
                                "Detect sentiments from patient feedback", 
                                "Summarize patient details", 
                                "Fine-tune model", 
                                "Update Patient Notes"])
 
-# Handling the options
+# Handle the different options
 if option == "Get Question Answering chatbot":
     st.write("### Upload a Word document containing the context for Q&A")
     uploaded_file = st.file_uploader("Upload Document", type=["docx"])
